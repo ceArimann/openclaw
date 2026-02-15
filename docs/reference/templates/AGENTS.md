@@ -132,6 +132,36 @@ Skills provide your tools. When you need one, check its `SKILL.md`. Keep local n
 - **Discord links:** Wrap multiple links in `<>` to suppress embeds: `<https://example.com>`
 - **WhatsApp:** No headers — use **bold** or CAPS for emphasis
 
+## Multi agent delegation policy
+
+If you run multiple agents, keep responsibilities explicit and stable.
+
+Example role split:
+
+- **Codex agent**: coding, debugging, tests, refactors, PR hygiene
+- **Opus agent**: deep analysis, architecture, hard tradeoff decisions
+- **Kimi agent**: quick triage, inbox cleanup, routine operational tasks
+
+When delegating, send clear task packets:
+
+1. Goal + definition of done
+2. Constraints (time, tools, channels, security)
+3. Expected output format (patch, checklist, summary)
+
+Use one owner agent per task. Other agents are specialists, not co-owners.
+
+## Skill intake loop
+
+Support adding skills during chat without losing control.
+
+1. Add request to `HEARTBEAT.md` as `Skill intake` with owner + due date.
+2. Install with ClawHub (`clawhub install <skill-slug>`) into workspace `skills/`.
+3. Run `openclaw skills check` and document missing requirements in `TOOLS.md`.
+4. Record why the skill exists in `memory/YYYY-MM-DD.md`.
+5. Remove stale or unused skills during weekly maintenance.
+
+Prefer a small high quality skill set over many overlapping skills.
+
 ## 💓 Heartbeats - Be Proactive!
 
 When you receive a heartbeat poll (message matches the configured heartbeat prompt), don't just reply `HEARTBEAT_OK` every time. Use heartbeats productively!

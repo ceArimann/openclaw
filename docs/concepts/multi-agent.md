@@ -281,6 +281,64 @@ Keep WhatsApp on the fast agent, but route one DM to Opus:
 
 Peer bindings always win, so keep them above the channel-wide rule.
 
+## Example: Role based delegation profile
+
+Use dedicated agents for different cognitive workloads and route work by channel.
+
+```json5
+{
+  agents: {
+    defaults: {
+      // Give spawned subagents a sensible default thinking level.
+      subagents: {
+        thinking: "medium",
+      },
+      // Keep compaction headroom so memory flushes can run before summarization.
+      compaction: {
+        reserveTokensFloor: 12000,
+        memoryFlush: {
+          enabled: true,
+          softThresholdTokens: 32000,
+          prompt: "Write durable notes to memory/YYYY-MM-DD.md, then reply HEARTBEAT_OK if no user-facing output is needed.",
+        },
+      },
+    },
+    list: [
+      {
+        id: "codex",
+        name: "Code",
+        workspace: "~/.openclaw/workspace-codex",
+        model: "openai/gpt-5.2-codex",
+      },
+      {
+        id: "opus",
+        name: "Deep Work",
+        workspace: "~/.openclaw/workspace-opus",
+        model: "anthropic/claude-opus-4-6",
+      },
+      {
+        id: "kimi",
+        name: "Ops",
+        workspace: "~/.openclaw/workspace-kimi",
+        model: "moonshotai/kimi-k2.5",
+      },
+    ],
+  },
+  bindings: [
+    { agentId: "codex", match: { channel: "github" } },
+    { agentId: "opus", match: { channel: "telegram" } },
+    { agentId: "kimi", match: { channel: "whatsapp" } },
+  ],
+}
+```
+
+Recommended pattern:
+
+- Keep the "everyday" channel on your fast model (for example Kimi).
+- Route engineering heavy contexts to Codex (for example GitHub or coding rooms).
+- Route strategy or long-form reasoning to Opus.
+- Use `sessions_spawn` when one agent needs help from another model mid-thread.
+
 ## Family agent bound to a WhatsApp group
 
 Bind a dedicated family agent to a single WhatsApp group, with mention gating
